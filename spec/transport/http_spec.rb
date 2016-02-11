@@ -38,6 +38,22 @@ describe Elementary::Transport::HTTP do
 
       it { should eql 'http://localhost:8080/rspec' }
     end
+
+    context 'without a protocol' do
+      let(:hosts) do
+        [ { :host => 'localhost', :port => 8080 } ]
+      end
+
+      it { should eql 'http://localhost:8080/' }
+    end
+
+    context 'with a protocol' do
+      let(:hosts) do
+        [ { :host => 'localhost', :port => 8080, :protocol => 'https' } ]
+      end
+
+      it { should eql 'https://localhost:8080/' }
+    end
   end
 
   describe '#client' do
