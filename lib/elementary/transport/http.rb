@@ -47,7 +47,9 @@ module Elementary
         # elasticsearch-ruby
         host = @hosts.first
         prefix = host[:prefix]
-        return "http://#{host[:host]}:#{host[:port]}/#{prefix}"
+        protocol = host[:protocol] || 'http'
+
+        return "#{protocol}://#{host[:host]}:#{host[:port]}/#{prefix}"
       end
 
       def client

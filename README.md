@@ -37,10 +37,11 @@ require 'elementary'
 require 'echoserv/service.pb' # Include our protobuf object declarations
 
 
+# You may, optionally, include a :protocol (e.g. 'https') key in a host hash
 hosts = [{:host => 'localhost', :port => '9292', :prefix => '/rpcserv'}]
 
 
-# Let's use the Statsd middleware to send RPC timing and count information to 
+# Let's use the Statsd middleware to send RPC timing and count information to
 # Graphite (this presumes we have already used `Statsd.create_instance` elsewhere
 # in our code)
 Elementary.use(Elementary::Middleware::Statsd, :client => Statsd.instance)
