@@ -3,7 +3,7 @@ require 'faraday'
 module Elementary
   module Middleware
     class HttpStatusError < StandardError
-      attr_accessor :status_code, :method, :url, :parent_message
+      attr_reader :status_code, :method, :url, :parent_message
       def initialize(opts = {})
         @status_code = opts.fetch(:status_code, nil)
         @method = opts.fetch(:method, "<Unknown Method>")

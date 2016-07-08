@@ -3,7 +3,7 @@ module Elementary
     # A simple root class to signify an failure on the RPC server side (see
     #   "rpc_failed 'message'")
     class RPCFailure < StandardError
-      attr_accessor :status_code, :method, :url, :header_message, :header_code
+      attr_reader :status_code, :method, :url, :header_message, :header_code
 
       def initialize(opts = {})
         @status_code = opts.fetch(:status_code, nil)
