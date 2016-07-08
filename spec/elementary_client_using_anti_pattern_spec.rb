@@ -6,6 +6,7 @@ def sendAndVerify(msg)
   response = client.invoke_echo_service(Elementary::Rspec::String.new(:data => msg))
   expect(response).to be_rejected
   expect(response.reason.class).to be Elementary::Middleware::HttpStatusError
+  expect(response.reason.connection_refused?).to be true
   expect(response.reason.message).to include("connection refused: localhost:8090")
 end
 

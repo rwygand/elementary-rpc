@@ -2,7 +2,27 @@ require 'faraday'
 
 module Elementary
   module Middleware
-    class HttpStatusError < StandardError; end
+    class HttpStatusError < StandardError
+      attr_accessor :status_code, :method, :url, :parent_message
+      def initialize(opts = {})
+        @status_code = opts.fetch(:status_code, nil)
+        @method = opts.fetch(:method, "<Unknown Method>")
+        @url = opts.fetch(:method, "<Unknown URL>")
+
+        message = if connection_refused?
+                    "#{method} #{url} returned a connection refused: #{opts.fetch(:parent_message, '<Unknown Message>')}"
+                  else
+                    "#{method} #{url} returned an HTTP response status of #{status_code}, so an exception was raised."
+                  end
+        super message
+      end
+
+      # We assume that the connection was refused if no status code was set.
+      # @return [Boolean]
+      def connection_refused?
+        @status_code.nil?
+      end
+    end
     ##
     # Raise an exception for certain HTTP response status codes
     #
@@ -54,19 +74,23 @@ module Elementary
           @app.call(request_env).on_complete do |response_env|
             status = response_env[:status]
             if @status_set.include? status
-              error_msg = response_env[:response_headers][ERROR_HEADER_MSG]
-              error_code = response_env[:response_headers][ERROR_HEADER_CODE]
-              if error_msg
-                raise Elementary::Errors::RPCFailure, "Error #{error_code}: #{error_msg}"
+              error_opts = {
+                  :status_code => status,
+                  :method => response_env.method.to_s.upcase,
+                  :url => response_env.url.to_s
+              }
+              headers = response_env[:response_headers]
+              if headers.include?(ERROR_HEADER_CODE) && headers.include?(ERROR_HEADER_MSG)
+                error_opts[:header_message] = headers[ERROR_HEADER_MSG]
+                error_opts[:header_code] = headers[ERROR_HEADER_CODE]
+                raise Elementary::Errors::RPCFailure, error_opts
               else
-                method = response_env.method.to_s.upcase
-                url = response_env.url.to_s
-                raise HttpStatusError, "#{method} #{url} returned an HTTP response status of #{status}, so an exception was raised."
+                raise HttpStatusError, error_opts
               end
             end
           end
         rescue Faraday::ClientError => e
-          raise HttpStatusError, "#{e.message}"
+          raise HttpStatusError, :parent_message => e.message
         end
       end
 
