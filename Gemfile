@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in elementary-rpc.gemspec
 gemspec
 
-gem 'rack'
+gem 'rack', '< 2.0.0'
+gem 'activesupport', '< 5.0.0'
 gem 'protobuffy', :github => 'lookout/protobuffy'
 
 group :test do
