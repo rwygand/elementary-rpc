@@ -7,3 +7,5 @@ deploy:
   provider: rubygems
   api_key:
     secure: MBokHfxas7tg/cZe1KXWVIjIoVgf4acZuzQ6D7GZW9WWxz2N03VzTGo3k4YF3oFdv+P3EfjwOTp3JUtrgm65EfvtTs7K+5lttU/D8JBeQagbZqCT8PlFUkNyxp0YPkZ5yNRjKxDgHKfTZ0YfEn+2j3qNLD/zdWomSm6iLOdLo6c=
+before_install:
+ - gem install bundler
