@@ -7,6 +7,7 @@ def send_and_verify_http_error_503(msg)
   expect(response).to be_rejected
   expect(response.reason.class).to be Elementary::Middleware::HttpStatusError
   expect(response.reason.message).to include("returned an HTTP response status of 503, so an exception was raised.")
+  expect(response.reason.status_code).to eql 503
   expect(response.reason.message).to include("Elementary::Rspec::Simple#error")
 end
 
@@ -14,6 +15,7 @@ def send_and_verify_http_error_500(msg)
   response = client.invoke_error_service(Elementary::Rspec::String.new(:data => msg))
   expect(response).to be_rejected
   expect(response.reason.class).to be Elementary::Errors::RPCFailure
+  expect(response.reason.status_code).to eql 500
   expect(response.reason.message).to include("sample failure")
   expect(response.reason.message).to include("Elementary::Rspec::Simple#error")
 end
@@ -22,6 +24,7 @@ def send_and_verify_http_error_400(msg)
   response = client.invoke_bad_request_data_service(Elementary::Rspec::String.new(:data => msg))
   expect(response).to be_rejected
   expect(response.reason.class).to be Elementary::Errors::RPCFailure
+  expect(response.reason.status_code).to eql 400
   expect(response.reason.message).to include("sample bad request data failure")
   expect(response.reason.message).to include("Elementary::Rspec::Simple#bad_request_data_method")
 end
@@ -30,6 +33,7 @@ def send_and_verify_http_error_404(msg)
   response = client.invoke_service_not_found_service(Elementary::Rspec::String.new(:data => msg))
   expect(response).to be_rejected
   expect(response.reason.class).to be Elementary::Errors::RPCFailure
+  expect(response.reason.status_code).to eql 404
   expect(response.reason.message).to include("sample service not found failure")
   expect(response.reason.message).to include("Elementary::Rspec::Simple#service_not_found_method")
 end
@@ -38,6 +42,8 @@ def send_and_verify_connection_refused(msg)
   response = client.invoke_error_service(Elementary::Rspec::String.new(:data => msg))
   expect(response).to be_rejected
   expect(response.reason.class).to be Elementary::Middleware::HttpStatusError
+  expect(response.reason.status_code).to be nil
+  expect(response.reason.connection_refused?).to be true
   expect(response.reason.message).to include("connection refused: localhost:8090")
   expect(response.reason.message).to include("Elementary::Rspec::Simple#error")
 end
