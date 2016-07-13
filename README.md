@@ -42,9 +42,9 @@ hosts = [{:host => 'localhost', :port => '9292', :prefix => '/rpcserv'}]
 
 
 # Let's use the Statsd middleware to send RPC timing and count information to
-# Graphite (this presumes we have already used `Statsd.create_instance` elsewhere
-# in our code)
-Elementary.use(Elementary::Middleware::Statsd, :client => Statsd.instance)
+# Graphite (this presumes we have already used `Lookout::Statsd.create_instance`
+# elsewhere in our code)
+Elementary.use(Elementary::Middleware::Statsd, :client => Lookout::Statsd.instance)
 
 
 # Create our Connection object that knows about our Protobuf service
@@ -123,4 +123,3 @@ Start the server hosting the rpc as below:
 Run the tests
 
     bundle exec rspec spec
-
