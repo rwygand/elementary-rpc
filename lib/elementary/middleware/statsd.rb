@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'statsd'
+require 'lookout/statsd'
 
 module Elementary
   module Middleware
@@ -7,12 +7,12 @@ module Elementary
       # Create a new Statsd middleware for Elementary
       #
       # @param [Hash] opts Hash of optional parameters
-      # @option opts [::Statsd::Client] :client Set to an existing instance of
-      # a +Statsd::Client+
+      # @option opts [Lookout::StatsdClient] :client Set to an existing instance of
+      # a +Lookout::StatsdClient+ or other object implementing Statsd interface.
       def initialize(app, opts={})
         @app = app
 
-        @statsd = opts[:client] || ::Statsd::Client.new
+        @statsd = opts[:client] || Lookout::StatsdClient.new
       end
 
       def call(service, rpc_method, *params)
