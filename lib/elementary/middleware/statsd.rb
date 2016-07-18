@@ -16,7 +16,7 @@ module Elementary
       end
 
       def call(service, rpc_method, *params)
-        @statsd.timing(metric_name(service.name, rpc_method.method)) do
+        @statsd.time(metric_name(service.name, rpc_method.method)) do
           @app.call(service, rpc_method, *params)
         end
       end
