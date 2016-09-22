@@ -15,5 +15,5 @@ group :development do
   gem 'pry'
   gem 'debugger', :platform => :mri_19
   gem 'debugger-pry', :platform => :mri_19
-  gem 'byebug', :platform => [:mri_20, :mri_21]
+  gem 'byebug', :platform => [:mri_20, :mri_21, :mri_22]
 end

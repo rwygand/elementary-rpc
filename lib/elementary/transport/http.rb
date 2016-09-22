@@ -63,7 +63,7 @@ module Elementary
         @client = Faraday.new(faraday_options) do |f|
           f.request :raise_on_status
           f.response :logger, logger if logging
-          f.adapter :net_http_persistent
+          f.adapter :httpclient
         end
 
         # Adapters aren't middleware, so we have to pop the adapter off before
