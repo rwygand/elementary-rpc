@@ -113,4 +113,33 @@ describe Elementary::Transport::HTTP do
       end
     end
   end
+
+  describe "#call" do
+    let(:hosts) { [{host: 'example.com', port: 80}] }
+    let(:service) { double('Protobuf::Service', name: 'fake_service' ) }
+    let(:rpc_method) { double('Protobuf::RpcMethod', method: 'fake_method') }
+    let(:protobuf) { double('Protobuf', encode: 'encoded_protobuf') }
+    subject(:call) { http.call(service, rpc_method, protobuf) }
+
+    context 'raises error' do
+      let(:error) { Elementary::Errors::RPCFailure.new({header_code: 500, header_message: 'rpc_failure'}) }
+      it 'should re-raise' do
+        expect(http).to receive(:client).and_raise(error)
+        expect { subject }.to raise_error error.class, /#{service.name}##{rpc_method.method}: #{error.message}/
+      end
+    end
+
+    if RUBY_PLATFORM == 'java'
+      # Can't easily do this this in MRI -- stubbing respond_to on the
+      # exception to return false for :exception makes RSpec think
+      # it's not an exception
+      context 'raises java exception' do
+        let(:error) { java.net.SocketException.new('oops') }
+        it 'should re-raise' do
+          expect(http).to receive(:client).and_raise(error)
+          expect { subject }.to raise_error error.class, /#{service.name}##{rpc_method.method}: #{error.message}/
+        end
+      end
+    end
+  end
 end
