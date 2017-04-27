@@ -36,7 +36,12 @@ module Elementary
 
           return rpc_method[:response_type].decode(response.body)
         rescue StandardError => e
-          raise e.exception("#{service.name}##{rpc_method.method}: #{e.message}")
+          if e.respond_to?(:exception)
+            raise e.exception("#{service.name}##{rpc_method.method}: #{e.message}")
+          else
+            # java.lang.Exceptions don't implement #exception
+            raise e.class.new("#{service.name}##{rpc_method.method}: #{e.message}")
+          end
         end
       end
 
