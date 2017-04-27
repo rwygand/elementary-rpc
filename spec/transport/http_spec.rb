@@ -115,7 +115,7 @@ describe Elementary::Transport::HTTP do
   end
 
   describe "#call" do
-    let(:hosts) { [{}] }
+    let(:hosts) { [{host: 'example.com', port: 80}] }
     let(:service) { double('Protobuf::Service', name: 'fake_service' ) }
     let(:rpc_method) { double('Protobuf::RpcMethod', method: 'fake_method') }
     let(:protobuf) { double('Protobuf', encode: 'encoded_protobuf') }
