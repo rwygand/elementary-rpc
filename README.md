@@ -107,8 +107,6 @@ Or install it yourself as:
 ### Testing
 
 Install ha-proxy for your OS
- For Mac OSX, good reference source is:
- http://nepalonrails.tumblr.com/post/9674428224/setup-haproxy-for-development-environment-on-mac
 
 Sample ha-proxy config can be found in `spec/support/haproxy.conf`.
 ```
